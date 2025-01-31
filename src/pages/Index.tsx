@@ -7,29 +7,28 @@ import type { Mug } from "@/components/MugCard";
 const DEMO_MUGS: Mug[] = [
   {
     id: "1",
-    name: "Snorkmaiden Pink",
+    name: "Snufkin's Adventure",
     year: 2020,
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/047f045a-19c3-4f0f-9858-5e9afc031327.png",
     rarity: "Common",
     price: 29.99,
   },
   {
     id: "2",
-    name: "Little My Red",
+    name: "Moomin Family Yellow",
     year: 2021,
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/4ede59ac-88cc-4acd-88ac-57fcb5bbbabb.png",
     rarity: "Rare",
     price: 49.99,
   },
   {
     id: "3",
-    name: "Moomintroll Blue",
+    name: "Moomin Family Pastel",
     year: 2019,
-    image: "/placeholder.svg",
+    image: "/lovable-uploads/ea44145c-80c8-4cbd-9057-e464367705d8.png",
     rarity: "Ultra Rare",
     price: 99.99,
   },
-  // Add more demo mugs as needed
 ];
 
 const Index = () => {
