@@ -11,7 +11,7 @@ const parseCSV = (csvText: string) => {
   return rows.map(row => {
     const values = row.split(',');
     return headerColumns.reduce((obj: any, header, index) => {
-      obj[header] = values[index];
+      obj[header] = values[index] || '';
       return obj;
     }, {});
   });
@@ -53,15 +53,22 @@ const MugDetail = () => {
     "Ultra Rare": "bg-accent text-white",
   };
 
+  // Extract just the filename from the path
+  const imageName = mug.bildfil.split('/').pop();
+
   return (
     <div className="container py-8">
       <Card className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 p-6">
           <div className="aspect-square overflow-hidden bg-muted rounded-lg">
             <img
-              src={`/mug_images/${mug.bildfil.split('/').pop()}`}
+              src={imageName ? `/mug_images/${imageName}` : '/placeholder.svg'}
               alt={mug.namn}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Image failed to load:', imageName);
+                e.currentTarget.src = '/placeholder.svg';
+              }}
             />
           </div>
           <div className="space-y-4">
