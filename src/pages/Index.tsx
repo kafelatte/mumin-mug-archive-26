@@ -2,10 +2,26 @@ import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import MugGrid from "@/components/MugGrid";
 import type { Mug } from "@/components/MugCard";
-import mugsData from "../../muminmuggar.csv";
+import mugsData from "../../muminmuggar.csv?raw";
+
+// Parse CSV data manually to avoid the label issue
+const parseCSV = (csvText: string) => {
+  const [headers, ...rows] = csvText.split('\n').filter(row => row.trim());
+  const headerColumns = headers.split(',');
+  
+  return rows.map(row => {
+    const values = row.split(',');
+    return headerColumns.reduce((obj: any, header, index) => {
+      obj[header] = values[index];
+      return obj;
+    }, {});
+  });
+};
+
+const parsedMugs = parseCSV(mugsData);
 
 // Transform CSV data into Mug objects
-const MUGS: Mug[] = mugsData.map((mug: any, index: number) => ({
+const MUGS: Mug[] = parsedMugs.map((mug: any, index: number) => ({
   id: (index + 1).toString(),
   name: mug.namn,
   year: parseInt(mug.tillverkad.split('–')[0]), // Take first year if range
@@ -16,7 +32,6 @@ const MUGS: Mug[] = mugsData.map((mug: any, index: number) => ({
 
 // Helper function to determine rarity based on year
 function determineRarity(year: number): "Common" | "Rare" | "Ultra Rare" {
-  const currentYear = new Date().getFullYear();
   if (year < 2000) return "Ultra Rare";
   if (year < 2015) return "Rare";
   return "Common";
@@ -24,7 +39,6 @@ function determineRarity(year: number): "Common" | "Rare" | "Ultra Rare" {
 
 // Helper function to determine price based on year
 function determinePrice(year: number): number {
-  const currentYear = new Date().getFullYear();
   if (year < 2000) return 299.99;
   if (year < 2015) return 149.99;
   return 79.99;
