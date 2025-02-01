@@ -2,40 +2,42 @@ import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import MugGrid from "@/components/MugGrid";
 import type { Mug } from "@/components/MugCard";
+import mugsData from "../../muminmuggar.csv";
 
-// Temporary data for demonstration
-const DEMO_MUGS: Mug[] = [
-  {
-    id: "1",
-    name: "Snufkin's Adventure",
-    year: 2020,
-    image: "/lovable-uploads/047f045a-19c3-4f0f-9858-5e9afc031327.png",
-    rarity: "Common",
-    price: 29.99,
-  },
-  {
-    id: "2",
-    name: "Moomin Family Yellow",
-    year: 2021,
-    image: "/lovable-uploads/4ede59ac-88cc-4acd-88ac-57fcb5bbbabb.png",
-    rarity: "Rare",
-    price: 49.99,
-  },
-  {
-    id: "3",
-    name: "Moomin Family Pastel",
-    year: 2019,
-    image: "/lovable-uploads/ea44145c-80c8-4cbd-9057-e464367705d8.png",
-    rarity: "Ultra Rare",
-    price: 99.99,
-  },
-];
+// Transform CSV data into Mug objects
+const MUGS: Mug[] = mugsData.map((mug: any, index: number) => ({
+  id: (index + 1).toString(),
+  name: mug.namn,
+  year: parseInt(mug.tillverkad.split('–')[0]), // Take first year if range
+  image: mug.bildfil,
+  rarity: determineRarity(parseInt(mug.tillverkad.split('–')[0])),
+  price: determinePrice(parseInt(mug.tillverkad.split('–')[0])),
+}));
+
+// Helper function to determine rarity based on year
+function determineRarity(year: number): "Common" | "Rare" | "Ultra Rare" {
+  const currentYear = new Date().getFullYear();
+  if (year < 2000) return "Ultra Rare";
+  if (year < 2015) return "Rare";
+  return "Common";
+}
+
+// Helper function to determine price based on year
+function determinePrice(year: number): number {
+  const currentYear = new Date().getFullYear();
+  if (year < 2000) return 299.99;
+  if (year < 2015) return 149.99;
+  return 79.99;
+}
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const filteredMugs = DEMO_MUGS.filter((mug) =>
+  const filteredMugs = MUGS.filter((mug) =>
     mug.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  console.log(`Loaded ${MUGS.length} mugs`);
+  console.log(`Displaying ${filteredMugs.length} mugs after filtering`);
 
   return (
     <div className="min-h-screen bg-background animate-fade-in">
@@ -45,7 +47,7 @@ const Index = () => {
             Moomin Mug Collection
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore our comprehensive database of Moomin mugs, featuring detailed
+            Explore our comprehensive database of {MUGS.length} Moomin mugs, featuring detailed
             information about each unique piece.
           </p>
         </div>
