@@ -25,7 +25,7 @@ const MUGS: Mug[] = parsedMugs.map((mug: any, index: number) => ({
   id: (index + 1).toString(),
   name: mug.namn,
   year: parseInt(mug.tillverkad.split('–')[0]), // Take first year if range
-  image: mug.bildfil,
+  image: `/${mug.bildfil}`, // Add leading slash to make path relative to public directory
   rarity: determineRarity(parseInt(mug.tillverkad.split('–')[0])),
   price: determinePrice(parseInt(mug.tillverkad.split('–')[0])),
 }));
