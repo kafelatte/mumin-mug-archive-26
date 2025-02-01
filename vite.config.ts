@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
-import csvPlugin from 'vite-plugin-csv'
+import csv from 'vite-plugin-csv'
 
 export default defineConfig({
   server: {
@@ -10,7 +10,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    csvPlugin()
+    csv()
   ],
   resolve: {
     alias: {
