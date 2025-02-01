@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { MugGrid } from "@/components/MugGrid";
-import { SearchBar } from "@/components/SearchBar";
+import MugGrid, { Mug } from "@/components/MugGrid";
+import SearchBar from "@/components/SearchBar";
 import mugsData from "../../muminmuggar.csv?raw";
 
 // Parse CSV data

@@ -1,4 +1,13 @@
-import MugCard, { Mug } from "./MugCard";
+import MugCard from "./MugCard";
+
+export interface Mug {
+  id: string;
+  name: string;
+  year: number;
+  image: string;
+  rarity: "Common" | "Rare" | "Ultra Rare";
+  price: number;
+}
 
 const MugGrid = ({ mugs }: { mugs: Mug[] }) => {
   return (
