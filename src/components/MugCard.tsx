@@ -18,14 +18,21 @@ const MugCard = ({ mug }: { mug: Mug }) => {
     "Ultra Rare": "bg-accent text-white",
   };
 
+  // Clean up the image path and ensure it starts with a forward slash
+  const imagePath = mug.image.startsWith('/') ? mug.image : `/${mug.image}`;
+
   return (
     <Link to={`/mug/${mug.id}`} className="group">
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
         <div className="aspect-square overflow-hidden bg-muted">
           <img
-            src={mug.image}
+            src={imagePath}
             alt={mug.name}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            onError={(e) => {
+              console.error('Image failed to load:', imagePath);
+              e.currentTarget.src = '/placeholder.svg';
+            }}
           />
         </div>
         <div className="p-4">

@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import mugsData from "../../muminmuggar.csv?raw";
 
-// Reuse the parsing logic from Index.tsx
 const parseCSV = (csvText: string) => {
   const [headers, ...rows] = csvText.split('\n').filter(row => row.trim());
   const headerColumns = headers.split(',');
@@ -24,7 +23,6 @@ const MugDetail = () => {
   console.log("Mug ID:", id);
   console.log("Total mugs:", parsedMugs.length);
 
-  // Find the mug by its muggnummer (mug number) instead of array index
   const mug = parsedMugs.find(m => m.muggnummer === id);
   console.log("Selected mug:", mug);
 
@@ -33,10 +31,9 @@ const MugDetail = () => {
   }
 
   const determineRarity = (yearString: string): "Common" | "Rare" | "Ultra Rare" => {
-    // Extract the first year if there's a range (e.g., "2019-2022" -> "2019")
     const year = parseInt(yearString.split('–')[0]);
     
-    if (isNaN(year)) return "Common"; // Default to Common if year can't be parsed
+    if (isNaN(year)) return "Common";
     if (year < 2000) return "Ultra Rare";
     if (year < 2015) return "Rare";
     return "Common";
@@ -45,7 +42,7 @@ const MugDetail = () => {
   const determinePrice = (yearString: string): number => {
     const year = parseInt(yearString.split('–')[0]);
     
-    if (isNaN(year)) return 79.99; // Default price if year can't be parsed
+    if (isNaN(year)) return 79.99;
     if (year < 2000) return 299.99;
     if (year < 2015) return 149.99;
     return 79.99;
@@ -60,8 +57,9 @@ const MugDetail = () => {
     "Ultra Rare": "bg-accent text-white",
   };
 
-  // Extract just the filename from the path
-  const imageName = mug.bildfil?.split('/').pop() || '';
+  // Clean up the image path and ensure it starts with a forward slash
+  const imagePath = mug.bildfil?.trim().replace('\r', '') || '';
+  console.log("Image path:", imagePath);
 
   return (
     <div className="container py-8">
@@ -69,11 +67,11 @@ const MugDetail = () => {
         <div className="grid md:grid-cols-2 gap-8 p-6">
           <div className="aspect-square overflow-hidden bg-muted rounded-lg">
             <img
-              src={imageName ? `/mug_images/${imageName}` : '/placeholder.svg'}
+              src={`/${imagePath}`}
               alt={mug.namn || 'Moomin mug'}
               className="w-full h-full object-cover"
               onError={(e) => {
-                console.error('Image failed to load:', imageName);
+                console.error('Image failed to load:', imagePath);
                 e.currentTarget.src = '/placeholder.svg';
               }}
             />
