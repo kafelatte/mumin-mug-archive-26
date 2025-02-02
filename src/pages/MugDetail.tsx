@@ -66,7 +66,9 @@ const MugDetail = () => {
   };
 
   // Clean up the image path and ensure it starts with a forward slash
-  const imagePath = mug.bildfil?.trim().replace('\r', '') || '';
+  const imagePath = mug.bildfil?.trim().startsWith('/') 
+    ? mug.bildfil?.trim() 
+    : `/${mug.bildfil?.trim()}`;
   console.log("Image path:", imagePath);
 
   return (
