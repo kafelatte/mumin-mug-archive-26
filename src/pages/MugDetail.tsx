@@ -23,7 +23,13 @@ const MugDetail = () => {
   console.log("Mug ID:", id);
   console.log("Total mugs:", parsedMugs.length);
 
-  const mug = parsedMugs.find(m => m.muggnummer === id);
+  // Find mug by matching the ID with muggnummer in reverse order
+  // since the CSV is ordered from newest to oldest
+  const mug = parsedMugs.find(m => {
+    const reversedId = (165 - parseInt(m.muggnummer)).toString();
+    return reversedId === id;
+  });
+  
   console.log("Selected mug:", mug);
 
   if (!mug) {
@@ -31,6 +37,7 @@ const MugDetail = () => {
   }
 
   const determineRarity = (yearString: string): "Common" | "Rare" | "Ultra Rare" => {
+    if (!yearString) return "Common";
     const year = parseInt(yearString.split('–')[0]);
     
     if (isNaN(year)) return "Common";
@@ -40,6 +47,7 @@ const MugDetail = () => {
   };
 
   const determinePrice = (yearString: string): number => {
+    if (!yearString) return 79.99;
     const year = parseInt(yearString.split('–')[0]);
     
     if (isNaN(year)) return 79.99;
@@ -67,7 +75,7 @@ const MugDetail = () => {
         <div className="grid md:grid-cols-2 gap-8 p-6">
           <div className="aspect-square overflow-hidden bg-muted rounded-lg">
             <img
-              src={`/${imagePath}`}
+              src={imagePath}
               alt={mug.namn || 'Moomin mug'}
               className="w-full h-full object-cover"
               onError={(e) => {
