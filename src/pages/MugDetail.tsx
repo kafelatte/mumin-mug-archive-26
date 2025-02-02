@@ -24,28 +24,35 @@ const MugDetail = () => {
   console.log("Mug ID:", id);
   console.log("Total mugs:", parsedMugs.length);
 
-  const mug = parsedMugs[Number(id) - 1];
+  // Find the mug by its muggnummer (mug number) instead of array index
+  const mug = parsedMugs.find(m => m.muggnummer === id);
   console.log("Selected mug:", mug);
 
   if (!mug) {
     return <div className="container py-8">Mug not found</div>;
   }
 
-  const determineRarity = (year: number): "Common" | "Rare" | "Ultra Rare" => {
+  const determineRarity = (yearString: string): "Common" | "Rare" | "Ultra Rare" => {
+    // Extract the first year if there's a range (e.g., "2019-2022" -> "2019")
+    const year = parseInt(yearString.split('–')[0]);
+    
+    if (isNaN(year)) return "Common"; // Default to Common if year can't be parsed
     if (year < 2000) return "Ultra Rare";
     if (year < 2015) return "Rare";
     return "Common";
   };
 
-  const determinePrice = (year: number): number => {
+  const determinePrice = (yearString: string): number => {
+    const year = parseInt(yearString.split('–')[0]);
+    
+    if (isNaN(year)) return 79.99; // Default price if year can't be parsed
     if (year < 2000) return 299.99;
     if (year < 2015) return 149.99;
     return 79.99;
   };
 
-  const year = parseInt(mug.tillverkad.split('–')[0]);
-  const rarity = determineRarity(year);
-  const price = determinePrice(year);
+  const rarity = determineRarity(mug.tillverkad || '');
+  const price = determinePrice(mug.tillverkad || '');
 
   const rarityColors = {
     Common: "bg-gray-200 text-gray-800",
@@ -54,7 +61,7 @@ const MugDetail = () => {
   };
 
   // Extract just the filename from the path
-  const imageName = mug.bildfil.split('/').pop();
+  const imageName = mug.bildfil?.split('/').pop() || '';
 
   return (
     <div className="container py-8">
@@ -63,7 +70,7 @@ const MugDetail = () => {
           <div className="aspect-square overflow-hidden bg-muted rounded-lg">
             <img
               src={imageName ? `/mug_images/${imageName}` : '/placeholder.svg'}
-              alt={mug.namn}
+              alt={mug.namn || 'Moomin mug'}
               className="w-full h-full object-cover"
               onError={(e) => {
                 console.error('Image failed to load:', imageName);
@@ -73,16 +80,16 @@ const MugDetail = () => {
           </div>
           <div className="space-y-4">
             <div className="flex justify-between items-start">
-              <h1 className="text-3xl font-bold text-foreground">{mug.namn}</h1>
+              <h1 className="text-3xl font-bold text-foreground">{mug.namn || 'Unknown name'}</h1>
               <Badge className={rarityColors[rarity]}>{rarity}</Badge>
             </div>
             <div className="space-y-2">
-              <p className="text-lg text-muted-foreground">Year: {mug.tillverkad}</p>
-              <p className="text-lg text-muted-foreground">Designer: {mug.designer}</p>
-              <p className="text-lg text-muted-foreground">Material: {mug.material}</p>
-              <p className="text-lg text-muted-foreground">Weight: {mug.vikt}</p>
-              <p className="text-lg text-muted-foreground">Volume: {mug.volym}</p>
-              <p className="text-2xl font-bold text-primary mt-4">${price}</p>
+              <p className="text-lg text-muted-foreground">Year: {mug.tillverkad || 'Unknown'}</p>
+              <p className="text-lg text-muted-foreground">Designer: {mug.designer || 'Unknown'}</p>
+              <p className="text-lg text-muted-foreground">Material: {mug.material || 'Unknown'}</p>
+              <p className="text-lg text-muted-foreground">Weight: {mug.vikt || 'Unknown'}</p>
+              <p className="text-lg text-muted-foreground">Volume: {mug.volym || 'Unknown'}</p>
+              <p className="text-2xl font-bold text-primary mt-4">${price.toFixed(2)}</p>
             </div>
           </div>
         </div>
