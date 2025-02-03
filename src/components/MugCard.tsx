@@ -18,8 +18,8 @@ const MugCard = ({ mug }: { mug: Mug }) => {
     "Ultra Rare": "bg-accent text-white",
   };
 
-  // Clean up the image path and ensure it starts with a forward slash
-  const imagePath = mug.image.startsWith('/') ? mug.image : `/${mug.image}`;
+  // Clean up the image path and ensure it starts with /mug_images/
+  const imagePath = mug.image.includes('mug_images') ? mug.image : `/mug_images/${mug.image.split('/').pop()}`;
 
   return (
     <Link to={`/mug/${mug.id}`} className="group">

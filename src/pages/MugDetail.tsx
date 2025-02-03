@@ -24,7 +24,6 @@ const MugDetail = () => {
   console.log("Total mugs:", parsedMugs.length);
 
   // Find mug by matching the ID with muggnummer in reverse order
-  // since the CSV is ordered from newest to oldest
   const mug = parsedMugs.find(m => {
     const reversedId = (165 - parseInt(m.muggnummer)).toString();
     return reversedId === id;
@@ -65,10 +64,11 @@ const MugDetail = () => {
     "Ultra Rare": "bg-accent text-white",
   };
 
-  // Clean up the image path and ensure it starts with a forward slash
-  const imagePath = mug.bildfil?.trim().startsWith('/') 
-    ? mug.bildfil?.trim() 
-    : `/${mug.bildfil?.trim()}`;
+  // Clean up the image path and ensure it starts with /mug_images/
+  const imagePath = mug.bildfil ? 
+    `/mug_images/${mug.bildfil.trim().split('/').pop()}` : 
+    '/placeholder.svg';
+  
   console.log("Image path:", imagePath);
 
   return (
